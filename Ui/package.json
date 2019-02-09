@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "types": "nswag run nswag.json /variables:FromUrl=http://localhost/Cats/swagger/v1/swagger.json",
     "dev": "webpack --config webpack.development.js",
     "prod": "webpack --config webpack.production.js"
   },

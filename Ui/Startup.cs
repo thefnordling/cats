@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Services;
 
 namespace Ui
 {
@@ -32,6 +33,14 @@ namespace Ui
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var catRepo = new CatRepository();
+
+            services.AddSingleton(typeof(CatRepository), catRepo);
+            services.AddSingleton(typeof(Cache), new Cache(catRepo));
+
+            services.AddSwaggerDocument();
+            services.AddSignalR();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +63,12 @@ namespace Ui
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUi3(c =>
+            {
+                c.DocumentPath = "/Cats/swagger/{documentName}/swagger.json";
             });
         }
     }

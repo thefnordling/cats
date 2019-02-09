@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\models.ts" />
     <None Remove="Scripts\site.ts" />
   </ItemGroup>
 
@@ -22,16 +21,18 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
+    <PackageReference Include="NSwag.AspNetCore" Version="12.0.13" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\models.ts" />
     <TypeScriptCompile Include="Scripts\site.ts" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <Folder Include="Scripts\nswag\" />
     <Folder Include="Scss\" />
   </ItemGroup>
 
@@ -45,6 +46,12 @@
     <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
     <None Include="wwwroot\webfonts\fa-solid-900.svg" />
     <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
