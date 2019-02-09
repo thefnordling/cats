@@ -14,6 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\models.ts" />
     <None Remove="Scripts\site.ts" />
   </ItemGroup>
 
@@ -25,7 +26,25 @@
 
 
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\models.ts" />
     <TypeScriptCompile Include="Scripts\site.ts" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Scss\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\webfonts\fa-brands-400.svg" />
+    <None Include="wwwroot\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-light-300.svg" />
+    <None Include="wwwroot\webfonts\fa-light-300.woff2" />
+    <None Include="wwwroot\webfonts\fa-regular-400.svg" />
+    <None Include="wwwroot\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\webfonts\fa-solid-900.svg" />
+    <None Include="wwwroot\webfonts\fa-solid-900.woff2" />
   </ItemGroup>
 
 </Project>
