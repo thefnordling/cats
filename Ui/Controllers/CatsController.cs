@@ -30,6 +30,9 @@ namespace Ui.Controllers
         [Route("~/api/Cats")]
         public ActionResult<Cat> InsertUpdate(Cat c)
         {
+            if (string.IsNullOrEmpty(c.Id))
+                c.Id = Guid.NewGuid().ToString();
+
             this.Repo.Insert(c);
             this.Cache.Insert(c);
             return Ok(c);

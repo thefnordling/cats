@@ -3,10 +3,12 @@ var path = require('path');
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 // the path(s) that should be cleaned
 let pathsToClean = [
-    'wwwroot/js/*.js',
+    'wwwroot/js/vendors.js',
+    'wwwroot/js/site.js',
     'wwwroot/css/vendors.css'
 ]
 
@@ -40,7 +42,8 @@ module.exports = {
         filename: '[name].js'
     },
 
-    resolve: {
+    resolve: { 
+        plugins: [new TsconfigPathsPlugin({ configFile: "./tsconfig.json" })],
         extensions: ['.ts', '.js']
     },
 
@@ -92,7 +95,9 @@ module.exports = {
             chunkFilename: "../css/vendors.css"
         }),
         new webpack.ProvidePlugin({
-             $: 'jquery'
+            jQuery: 'jquery',
+            '$': 'jquery',
+            'window.jQuery': 'jquery'
         })
     ]
 };

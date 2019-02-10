@@ -1,18 +1,18 @@
 ﻿import 'bootstrap';
 import "../scss/_bootstrap-custom.scss";
-import { Grid, GridOptions, RowNode, RowValueChangedEvent, RowDataUpdatedEvent, ColDef, SelectionChangedEvent } from "ag-grid-community";
+import { Grid, GridOptions, RowNode, RowValueChangedEvent, RowDataUpdatedEvent, ColDef, SelectionChangedEvent, ValueFormatterParams, ValueGetterParams, ICellRendererParams, ICellRenderer } from "ag-grid-community";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import * as signalR from "@aspnet/signalr";
 import { CatsClient, Cat, Mood } from "./nswag/client";
-import { Moment } from "moment";
 import moment = require('moment');
 
 class Site {
     protected gridOptions = <GridOptions>{};
     protected hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/HoldingsGrid/hub")
+        .withUrl("/Cats/hub")
         .build();
+
     catsClient = new CatsClient();
     $catModal = $('#cat-modal');
     $catTitle = $('#cat-modal-title');
@@ -27,6 +27,8 @@ class Site {
     $catBirth = $('#cat-birth');
     $catMood = $('#cat-mood');
     $catHungry = $('#cat-hungry');
+
+    catFlatpicker: any;
 
     constructor() {
         this.gridOptions.columnDefs = this.getColumns();
@@ -51,6 +53,54 @@ class Site {
 
         this.$catModal.on('show.bs.modal', () => this.catModalShown());
         this.$deleteModal.on('show.bs.modal', () => this.deleteModalShown());
+        this.catFlatpicker = (<any>window).flatpickr(<HTMLElement>document.querySelector('#cat-birth'), {
+            enableTime: true
+        });
+
+        this.$confirmSave.click(() => this.saveCat());
+        this.$confirmDelete.click(() => this.deleteCat());
+
+        this.hubConnection.start().catch(err => console.log(err));
+        this.hubConnection.on("updateCat", (c: Cat) => this.updateCat(c));
+        this.hubConnection.on("deleteCat", (c: Cat) => this.removeCat(c));
+    }
+    updateCat(c: Cat) {
+        if (!c || !c.id) {
+            return;
+        }
+
+        if (this.gridOptions.api!.getRowNode(c.id)) {
+            this.gridOptions.api!.updateRowData({ update: [c] });
+        } else {
+            this.gridOptions.api!.updateRowData({ add: [c] });
+        }
+    }
+    removeCat(c: Cat) {
+        if (!c || !c.id) {
+            return;
+        }
+        this.gridOptions.api!.updateRowData({ remove: [c] });
+    }
+    saveCat() {
+        const cat = this.getCatFromModal();
+        this.catsClient.insertUpdate(cat, (c: Cat | null) => {
+            if (c) {
+                this.hubConnection.invoke("catUpdated", c);
+
+                this.$catModal.modal('hide');
+            }
+        });
+    }
+    deleteCat() {
+        const cat = this.getSelectedCat();
+        if (cat) {
+            this.catsClient.delete(cat, (c: Cat | null) => {
+                if (c) {
+                    this.hubConnection.invoke("catDeleted", c);
+                    this.$deleteModal.modal('hide');
+                }
+            });
+        }
     }
     gridSelectionChanged(event: SelectionChangedEvent) {
         const selected = this.getSelectedCat();
@@ -61,24 +111,64 @@ class Site {
         }
     }
     catModalShown() {
-        let selected = this.getSelectedCat() || new Cat();
-        this.setModalFromCat(selected);
-        this.$catTitle.text("Add A Cat");
+        if (this.$catModal.data('action') == 'add') {
+            this.setModalFromCat();
+            this.$catTitle.text("Add A Cat");
+        } else {
+            let selected = this.getSelectedCat() || new Cat();
+            this.setModalFromCat(selected);
+            this.$catTitle.text("Edit A Cat");
+        }
     }
     deleteModalShown() {
-
+        const selected = this.getSelectedCat();
+        if (selected && selected.name) {
+            this.$deleteCatName.text(selected.name);
+        } else if (selected) {
+            this.$deleteCatName.text(selected.id || "Undefined");
+        }
     }
     loadCats(cats: Cat[] | null) {
         this.gridOptions.api!.setRowData(cats || []);
     }
     getColumns(): ColDef[] {
         return [
-            { headerName: "Id", field: "id" },
+            { headerName: "Id", field: "id", hide: true },
             { headerName: "Name", field: "name" },
-            { headerName: "Birth", field: "birth" },
-            { headerName: "Hungry", field: "hungry" },
-            { headerName: "Mood", field: "mood" }
+            { headerName: "Birth", field: "birth", valueFormatter: (params: ValueFormatterParams) => this.formatBirth(params)},
+            { headerName: "Hungry", field: "hungry", cellRenderer: (p: ICellRendererParams) => this.renderHungry(p) },
+            { headerName: "Mood", field: "mood", cellRenderer: (p: ICellRendererParams) => this.renderMood(p)}
         ]
+    }
+    formatBirth(p: ValueFormatterParams): string  {
+        if (!p.value) {
+            return "";
+        }
+
+        return moment(p.value).format("YYYY-MM-DD hh:mm");
+    }
+    renderHungry(p: ICellRendererParams) {
+        if (p.data && p.data.hungry) {
+            return '<i class="far fa-check-square"></i>';
+        } else {
+            return '<i class="far fa-square"></i>';
+        }
+    }
+    renderMood(p: ICellRendererParams) {
+        if (!p.data || !p.data.mood) {
+            return '<i class="far"></i>';
+        } else {
+            switch (p.data.mood) {
+                case 1:
+                    return '<i class="fas fa-square" style="color: red"></i> Red';
+                case 2:
+                    return '<i class="fas fa-square" style="color: #FFBF00"></i> Amber';
+                case 3:
+                    return '<i class="fas fa-square" style="color: green"></i> Green';
+                default:
+                    return '<i class="far"></i>';
+            }
+        }
     }
     getSelectedCat(): Cat | undefined {
         const selected = this.gridOptions.api!.getSelectedNodes();
@@ -96,12 +186,15 @@ class Site {
             mood: this.getInputMood(this.$catMood)
         });
     }
-    setModalFromCat(cat: Cat) {
+    setModalFromCat(cat?: Cat) {
+        cat = cat || new Cat();
+
         this.$catId.val(cat.id || "");
         this.$catName.val(cat.name || "");
-        this.$catBirth.val(moment(cat.birth).format());
+        //this.$catBirth.val(moment(cat.birth).format());
+        this.catFlatpicker.setDate(cat.birth);
         this.$catHungry.prop('checked', cat.hungry);
-        this.$catModal.val(cat.mood);
+        this.$catMood.val(cat.mood);
     }
     getInputString($input: JQuery<HTMLElement>): string | undefined {
         const val = $input.val();

@@ -32,7 +32,10 @@ namespace Ui
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddRazorOptions(options => options.AllowRecompilingViewsOnFileChange = true);
+
             var catRepo = new CatRepository();
 
             services.AddSingleton(typeof(CatRepository), catRepo);
@@ -69,6 +72,11 @@ namespace Ui
             app.UseSwaggerUi3(c =>
             {
                 c.DocumentPath = "/Cats/swagger/{documentName}/swagger.json";
+            });
+
+            app.UseSignalR(c =>
+            {
+                c.MapHub<CatHub>("/hub");
             });
         }
     }

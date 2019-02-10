@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "types": "nswag run nswag.json /variables:FromUrl=http://localhost/Cats/swagger/v1/swagger.json",
+    "dev:watch": "webpack --config webpack.development.js --watch",
     "dev": "webpack --config webpack.development.js",
     "prod": "webpack --config webpack.production.js"
   },
@@ -14,12 +15,16 @@
   "devDependencies": {
     "@aspnet/signalr": "^1.1.0",
     "@fortawesome/fontawesome-pro": "^5.6.3",
+    "@types/bootstrap": "^4.2.1",
+    "@types/eonasdan-bootstrap-datetimepicker": "^4.17.26",
     "@types/jquery": "^3.3.29",
     "ag-grid-community": "^20.0.0",
     "autoprefixer": "^9.4.5",
     "bootstrap": "^4.2.1",
     "clean-webpack-plugin": "^1.0.1",
     "css-loader": "^2.1.0",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "flatpickr": "^4.5.2",
     "jquery": "^3.3.1",
     "mini-css-extract-plugin": "^0.5.0",
     "moment": "^2.0.0",
@@ -31,6 +36,7 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^5.3.3",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typescript": "^3.2.4",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",

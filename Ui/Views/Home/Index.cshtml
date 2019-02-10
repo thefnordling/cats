@@ -22,7 +22,7 @@
 </div>
 
 @section Modals {
-    <div class="modal" tabindex="-1" role="dialog" id="cat-modal">
+    <div class="modal fade" role="dialog" id="cat-modal" data-backdrop="static">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,7 +45,7 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="cat-birth">Born</label>
-                                        <input type="datetime-local" class="form-control" id="cat-birth" placeholder="Born">
+                                        <input type="text" class="form-control" id="cat-birth" placeholder="Born">
                                     </div>
                                 </div>
                             </div>
@@ -60,10 +60,10 @@
                                     <div class="form-group">
                                         <label for="cat-mood">Mood</label>
                                         <select class="form-control" id="cat-mood">
-                                            <option></option>
-                                            <option value="Green">Green</option>
-                                            <option value="Amber">Amber</option>
-                                            <option value="Red">Red</option>
+                                            <option value="0"></option>
+                                            <option value="3">Green</option>
+                                            <option value="2">Amber</option>
+                                            <option value="1">Red</option>
                                         </select>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-confirm"><i class="far fa-save"></i> Save</button>
+                    <button type="button" class="btn btn-primary" id="confirm-save"><i class="far fa-save"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -91,13 +91,13 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            Are you sure you want to delete <span id="delete-modal-cat-name"></span>?
+                            Are you sure you want to delete: <span id="delete-modal-cat-name" style="padding-left: 1rem; font-weight: bold"></span>?
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="delete-confirm"><i class="far fa-trash-alt"></i> Confirm</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete"><i class="far fa-trash-alt"></i> Confirm</button>
                 </div>
             </div>
         </div>
