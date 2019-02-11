@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+<div class="row">
+    <div class="col">&nbsp;</div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Please Log In
+            </div>
+            <div class="card-body">
+                <form method="post" action="@Url.Content("~/Home/Login")">
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-user"></i></span>
+                                </div>
+                                <input type="text" name="user[id]" class="form-control" placeholder="Username" aria-label="Username" required>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-lock"></i></span>
+                                </div>
+                                <input type="password"  name="user[password]"class="form-control" placeholder="Username" aria-label="Username" required>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary float-right"><i class="far fa-sign-in-alt"></i> Log In</button>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

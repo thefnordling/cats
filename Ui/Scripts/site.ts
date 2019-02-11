@@ -10,10 +10,10 @@ import moment = require('moment');
 class Site {
     protected gridOptions = <GridOptions>{};
     protected hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/Cats/hub")
+        .withUrl("/cats/hub")
         .build();
-
-    catsClient = new CatsClient();
+    
+    catsClient = new CatsClient("/cats");
     $catModal = $('#cat-modal');
     $catTitle = $('#cat-modal-title');
     $confirmSave = $('#confirm-save');
@@ -34,9 +34,11 @@ class Site {
         this.gridOptions.columnDefs = this.getColumns();
         this.gridOptions.getRowNodeId = (cat: Cat) => cat.id || "";
         this.gridOptions.rowSelection = 'single';
-        this.gridOptions.enableSorting = true;
+        this.gridOptions.defaultColDef = {
+            sortable: true,
+            resizable: true
+        };
         this.gridOptions.enableCellChangeFlash = true;
-        this.gridOptions.enableColResize = true;
         this.gridOptions.rowData = [];
         this.gridOptions.onSelectionChanged = (event: SelectionChangedEvent) => this.gridSelectionChanged(event);
         const eGridDiv: HTMLElement = <HTMLElement>document.querySelector('#cat-grid');
