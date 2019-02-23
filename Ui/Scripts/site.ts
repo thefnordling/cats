@@ -8,12 +8,14 @@ import { CatsClient, Cat, Mood } from "./nswag/client";
 import moment = require('moment');
 
 class Site {
+    siteRoot: string = (<any>window).__site_root;
+
     protected gridOptions = <GridOptions>{};
-    protected hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/cats/hub")
+    protected hubConnection: signalR.HubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${this.siteRoot}/hub`)
         .build();
-    
-    catsClient = new CatsClient("/cats");
+
+    catsClient = new CatsClient(this.siteRoot);
     $catModal = $('#cat-modal');
     $catTitle = $('#cat-modal-title');
     $confirmSave = $('#confirm-save');
@@ -137,12 +139,12 @@ class Site {
         return [
             { headerName: "Id", field: "id", hide: true },
             { headerName: "Name", field: "name" },
-            { headerName: "Birth", field: "birth", valueFormatter: (params: ValueFormatterParams) => this.formatBirth(params)},
+            { headerName: "Birth", field: "birth", valueFormatter: (params: ValueFormatterParams) => this.formatBirth(params) },
             { headerName: "Hungry", field: "hungry", cellRenderer: (p: ICellRendererParams) => this.renderHungry(p) },
-            { headerName: "Mood", field: "mood", cellRenderer: (p: ICellRendererParams) => this.renderMood(p)}
+            { headerName: "Mood", field: "mood", cellRenderer: (p: ICellRendererParams) => this.renderMood(p) }
         ]
     }
-    formatBirth(p: ValueFormatterParams): string  {
+    formatBirth(p: ValueFormatterParams): string {
         if (!p.value) {
             return "";
         }
@@ -193,7 +195,6 @@ class Site {
 
         this.$catId.val(cat.id || "");
         this.$catName.val(cat.name || "");
-        //this.$catBirth.val(moment(cat.birth).format());
         this.catFlatpicker.setDate(cat.birth);
         this.$catHungry.prop('checked', cat.hungry);
         this.$catMood.val(cat.mood);

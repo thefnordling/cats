@@ -43,6 +43,10 @@
     <div class="container-fluid" style="height:calc(100% - 140px)">
         @RenderBody()
     </div>
+
+    <script>
+        __site_root = "@Context.Request.Scheme://@Context.Request.Host@Context.Request.PathBase";
+    </script>
     @RenderSection("Modals", false);
     <script src="~/js/vendors.js" asp-append-version="true"></script>
     <script src="~/js/flatpickr.min.js" asp-append-version="true"></script>

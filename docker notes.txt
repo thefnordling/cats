@@ -1,0 +1,2 @@
+docker build -t ui .
+docker run -d -p 8080:5000 --name myapp ui
