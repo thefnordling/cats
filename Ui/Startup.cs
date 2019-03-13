@@ -60,7 +60,7 @@ namespace Ui
                 });
 
             var catRepo = new CatRepository();
-            services.AddSingleton(typeof(CatRepository), catRepo);
+            services.AddSingleton(typeof(IRepository<Cat>), catRepo);
             services.AddSingleton(typeof(Cache));
 
             if (CurrentEnvironment.IsDevelopment())
