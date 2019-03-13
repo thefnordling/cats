@@ -10,7 +10,7 @@ namespace Services
     public class Cache : IRepository<Cat>
     {
         private ConcurrentDictionary<string, Cat> Cats { get; set; } = new ConcurrentDictionary<string, Cat>(StringComparer.OrdinalIgnoreCase);
-        public Cache(CatRepository repo)
+        public Cache(IRepository<Cat> repo)
         {
             repo.Get().ToList().ForEach(c => this.Insert(c));
         }
