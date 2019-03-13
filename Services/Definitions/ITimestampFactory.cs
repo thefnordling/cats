@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Services
 {
-    interface ITimestampFactory
+    public interface ITimestampFactory
     {
         DateTimeOffset GetTimestamp(DateTime time);
     }
