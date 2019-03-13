@@ -14,8 +14,8 @@ namespace Ui.Controllers
     public class CatsController : ControllerBase
     {
         private Cache Cache { get; set; }
-        private CatRepository Repo { get; set; }
-        public CatsController(Cache cache, CatRepository repo)
+        private IRepository<Cat> Repo { get; set; }
+        public CatsController(Cache cache, IRepository<Cat> repo)
         {
             this.Cache = cache;
             this.Repo = repo;
