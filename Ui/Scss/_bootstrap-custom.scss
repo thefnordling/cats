@@ -1,2 +1,7 @@
-@import "site.scss";
+$enable-shadows: true;
+$enable-gradients: true;
+$enable-hover-media-query: true;
+$body-bg: #CCC;
+$body-color: #111;
+
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
