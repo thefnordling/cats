@@ -5,20 +5,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-// the path(s) that should be cleaned
-let pathsToClean = [
-    'wwwroot/js/vendors.js',
-    'wwwroot/js/site.js',
-    'wwwroot/css/vendors.css'
-]
-
-// the clean options to use
-let cleanOptions = {
-    root: path.resolve('./'),
-    verbose: true,
-    dry: false
-}
-
 module.exports = {
     entry: {
         site: './Scripts/site.ts'
@@ -89,7 +75,7 @@ module.exports = {
     },
 
     plugins: [
-        new CleanWebpackPlugin(pathsToClean, cleanOptions),
+        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
             filename: "../css/vendors.css",
             chunkFilename: "../css/vendors.css"
