@@ -1,6 +1,6 @@
 {
   "runtime": "NetCore21",
-  "defaultVariables": "FromUrl=http://localhost/Cats/swagger/v1/swagger.json",
+  "defaultVariables": "FromUrl=http://localhost/ui/swagger/v1/swagger.json",
   "swaggerGenerator": {
     "fromSwagger": {
       "url": "$(FromUrl)",
